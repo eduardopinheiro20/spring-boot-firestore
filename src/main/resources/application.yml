@@ -1,0 +1,17 @@
+
+PROJECT_ID:  gestao-transacoes
+
+spring:
+  cloud:
+      config:
+        namespace: default
+        enabled: true
+        name: Cloud
+        profile: dev, cloud, firestore
+        label: master
+      gcp:
+        credentials:
+          location: classpath:serviceAccountKey.json
+        firestore:
+          project-id: ${PROJECT_ID:gestao-transacoes}
+          enabled: true
