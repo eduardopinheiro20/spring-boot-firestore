@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Mono;
 
 import java.util.concurrent.ExecutionException;
 
@@ -18,8 +17,16 @@ public class GestaoTransacoesController {
     GestaoTransacoesService gestaoTransacoesService;
 
     @PostMapping("/transacoes")
-    public Mono<GestaoTransacoes> save(@RequestBody GestaoTransacoes GestaoTransacoes) {
-        return gestaoTransacoesService.addTransacoes(GestaoTransacoes);
+    public ResponseEntity<GestaoTransacoes> save(@RequestBody GestaoTransacoes gestaoTransacoes) {
+
+        ResponseEntity responseEntity = null;
+        try {
+            this.gestaoTransacoesService.addTransacoes(gestaoTransacoes);
+            responseEntity = new ResponseEntity(gestaoTransacoes, HttpStatus.CREATED);
+        } catch (Exception pException) {
+            throw pException;
+        }
+        return responseEntity;
     }
 
     @PutMapping("/{id}/atualizarProtocoloFraudes")
@@ -35,9 +42,15 @@ public class GestaoTransacoesController {
     }
 
     @GetMapping("/consultaStatusFraudes/{idTransacao}")
-    public Mono<GestaoTransacoes> getById(@PathVariable String idTransacao) {
-        Mono<GestaoTransacoes> mono = gestaoTransacoesService.getById(idTransacao);
-        return mono;
+    public ResponseEntity<GestaoTransacoes> getById(@PathVariable String idTransacao) {
+        ResponseEntity<GestaoTransacoes> responseEntity;
+
+        try {
+            responseEntity = new ResponseEntity<>(this.gestaoTransacoesService.getById(idTransacao), HttpStatus.OK);
+        } catch (Exception pException) {
+            throw  pException;
+        }
+        return responseEntity;
     }
 
 }
