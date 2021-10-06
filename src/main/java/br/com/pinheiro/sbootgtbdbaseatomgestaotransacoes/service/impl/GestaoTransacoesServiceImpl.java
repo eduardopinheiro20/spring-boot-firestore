@@ -1,8 +1,8 @@
 package br.com.pinheiro.sbootgtbdbaseatomgestaotransacoes.service.impl;
 ;
 import br.com.pinheiro.sbootgtbdbaseatomgestaotransacoes.domain.GestaoTransacoes;
+import br.com.pinheiro.sbootgtbdbaseatomgestaotransacoes.domain.TransacoesConstants;
 import br.com.pinheiro.sbootgtbdbaseatomgestaotransacoes.enums.FirestoreCollection;
-import br.com.pinheiro.sbootgtbdbaseatomgestaotransacoes.repository.GestaoTransacoesRepository;
 import br.com.pinheiro.sbootgtbdbaseatomgestaotransacoes.service.GestaoTransacoesService;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
@@ -10,6 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
@@ -52,22 +55,37 @@ public class GestaoTransacoesServiceImpl  implements GestaoTransacoesService {
     }
 
     @Override
-    public String atualizarProtocoloFraudes(String id, final GestaoTransacoes pGestaoTransacoes)
-                    throws ExecutionException, InterruptedException {
-
-        ApiFuture<WriteResult> collectionApiFuture =  getCollection().document(id).set(pGestaoTransacoes);
-        return collectionApiFuture.get().getUpdateTime().toString();
+    public void atualizarProtocoloFraudes(final GestaoTransacoes trasacao) {
+        Map<String, Object> attributes = null;
+        if(Objects.nonNull(trasacao)) {
+            attributes = new HashMap<>();
+            createTransacaoMap(trasacao, attributes, true);
+            this.firestore.collection(FirestoreCollection.COLLECTION_GESTAO_TRANSACOES.getStorageName()).document(trasacao.getIdTransacao()).update(attributes);
+        }
     }
 
     @Override
-    public String atualizarStatusFraudes(final String id, final GestaoTransacoes pGestaoTransacoes)
-                    throws ExecutionException, InterruptedException {
+    public void atualizarStatusFraudes( final GestaoTransacoes trasacao) {
+        Map<String, Object> attributes = null;
 
-        ApiFuture<WriteResult> collectionApiFuture =  getCollection().document(id).set(pGestaoTransacoes);
-        return collectionApiFuture.get().getUpdateTime().toString();
+        if(Objects.nonNull(trasacao)) {
+            attributes = new HashMap<>();
+            createTransacaoMap(trasacao, attributes, false);
+            this.firestore.collection(FirestoreCollection.COLLECTION_GESTAO_TRANSACOES.getStorageName()).document(trasacao.getIdTransacao()).update(attributes);
+        }
     }
 
     public CollectionReference getCollection() {
         return firestore.collection("gestao-transacoes");
+    }
+
+    private void createTransacaoMap(final GestaoTransacoes trasacao, final Map<String, Object> attributes, boolean busca) {
+        if (!Objects.isNull(trasacao)) {
+            if(busca){
+                attributes.put(TransacoesConstants.ID_FRAUDES, trasacao.getIdFraudes());
+            } else {
+                attributes.put(TransacoesConstants.STATUS_TRANSACAO, trasacao.getStatus());
+            }
+        }
     }
 }

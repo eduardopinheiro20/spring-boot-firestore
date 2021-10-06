@@ -13,8 +13,8 @@ public class GestaoTransacoes {
     private Long idFraudes;
     private Long idEfetivacao;
     private String status;
-    private Pix pix;
-    private Ted ted;
-    private Tef tef;
-    private Boleto boleto;
+    private PayloadPix payloadPix;
+    private PayloadTed payloadTed;
+    private PayloadTef payloadTef;
+    private PayloadBoleto payloadBoleto;
 }

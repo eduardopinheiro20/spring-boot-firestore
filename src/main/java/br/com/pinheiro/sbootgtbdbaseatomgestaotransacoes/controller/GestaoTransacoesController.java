@@ -29,16 +29,29 @@ public class GestaoTransacoesController {
         return responseEntity;
     }
 
-    @PutMapping("/{id}/atualizarProtocoloFraudes")
-    public ResponseEntity updateProtocoloFraudes(@PathVariable(value = "id") String id, @RequestBody GestaoTransacoes pGestaoTransacoes)
-                    throws ExecutionException, InterruptedException {
-        return new ResponseEntity(gestaoTransacoesService.atualizarProtocoloFraudes(id, pGestaoTransacoes), HttpStatus.OK);
+    @PutMapping("/atualizarProtocoloFraudes")
+    public ResponseEntity updateProtocoloFraudes( @RequestBody GestaoTransacoes gestaoTransacoes) {
+
+        ResponseEntity responseEntity = null;
+        try {
+            this.gestaoTransacoesService.atualizarProtocoloFraudes(gestaoTransacoes);
+            responseEntity = new ResponseEntity(gestaoTransacoes, HttpStatus.OK);
+        } catch (Exception pException) {
+            throw pException;
+        }
+        return responseEntity;
     }
 
-    @PutMapping("/{id}/atualizarStatusFraudes")
-    public ResponseEntity updateStatusFraudes(@PathVariable(value = "id") String id, @RequestBody GestaoTransacoes pGestaoTransacoes)
-                    throws ExecutionException, InterruptedException {
-        return new ResponseEntity(gestaoTransacoesService.atualizarStatusFraudes(id, pGestaoTransacoes), HttpStatus.OK);
+    @PutMapping("/atualizarStatusFraudes")
+    public ResponseEntity updateStatusFraudes( @RequestBody GestaoTransacoes gestaoTransacoes) {
+        ResponseEntity responseEntity = null;
+        try {
+            this.gestaoTransacoesService.atualizarStatusFraudes(gestaoTransacoes);
+            responseEntity = new ResponseEntity(gestaoTransacoes, HttpStatus.OK);
+        } catch (Exception pException) {
+            throw pException;
+        }
+        return responseEntity;
     }
 
     @GetMapping("/consultaStatusFraudes/{idTransacao}")

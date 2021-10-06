@@ -9,11 +9,9 @@ public interface GestaoTransacoesService {
 
     public void addTransacoes(GestaoTransacoes pGestaoTransacoes);
 
-    public String atualizarProtocoloFraudes(String id, GestaoTransacoes pGestaoTransacoes)
-                    throws ExecutionException, InterruptedException;
+    public void  atualizarProtocoloFraudes(GestaoTransacoes pGestaoTransacoes);
 
-    public String atualizarStatusFraudes(String id, GestaoTransacoes pGestaoTransacoes)
-                    throws ExecutionException, InterruptedException;
+    public void atualizarStatusFraudes(GestaoTransacoes pGestaoTransacoes);
 
     public GestaoTransacoes getById(String id);
 
